@@ -1,0 +1,50 @@
+---
+title: "Raining In Seattle"
+author: "Faris Nour"
+date: '2018-01-25'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem
+
+You're about to get on a plane to Seattle. You want to know if you should bring an umbrella. You call 3 random friends of yours who live there and ask each independently if it's raining. Each of your friends has a 2/3 chance of telling you the truth and a 1/3 chance of messing with you by lying. All 3 friends tell you that "Yes" it is raining. What is the probability that it's actually raining in Seattle? [Link](https://goo.gl/ndJ5oJ)
+
+This document will run through a simulation of this problem and give us an answer based on the average probability. Modifying `S` will run the experiment more times
+
+```{r cars}
+S <- 2000
+count = 0
+positive = 0
+for (i in 1:S) {
+  raining <- sample(x = c(TRUE, FALSE), prob = c(1/4, 3/4), size = 1)
+  friend1 <- sample(x = c("yes", "no"), size = 1, prob = c(2/3, 1/3), replace = TRUE)
+  friend2 <- sample(x = c("yes", "no"), size = 1, prob = c(2/3, 1/3), replace = TRUE)
+  friend3 <- sample(x = c("yes", "no"), size = 1, prob = c(2/3, 1/3), replace = TRUE)
+  if (raining == FALSE) friend1 <- if (friend1 == "yes") "no" else "yes"
+  if (raining == FALSE) friend2 <- if (friend2 == "yes") "no" else "yes"
+  if (raining == FALSE) friend3 <- if (friend3 == "yes") "no" else "yes"
+  if (friend1 == "yes" && friend2 == "yes" && friend3 == "yes") {
+    count <- count + 1
+    if (raining) positive <- positive + 1
+  }
+}
+
+print(positive/count)
+
+```
+Compare this with the actual answer which is 8/11 = 0.72727272
+
+
+## Including Plots
+
+TODO: Make a histogram plot of the above data
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
