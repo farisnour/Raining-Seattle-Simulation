@@ -17,34 +17,42 @@ This document will run through a simulation of this problem and give us an answe
 
 ```{r cars}
 S <- 2000
-count = 0
-positive = 0
+n <- 500
+count <- rep(0, S)
+positive <- rep(0, S)
 for (i in 1:S) {
-  raining <- sample(x = c(TRUE, FALSE), prob = c(1/4, 3/4), size = 1)
-  friend1 <- sample(x = c("yes", "no"), size = 1, prob = c(2/3, 1/3), replace = TRUE)
-  friend2 <- sample(x = c("yes", "no"), size = 1, prob = c(2/3, 1/3), replace = TRUE)
-  friend3 <- sample(x = c("yes", "no"), size = 1, prob = c(2/3, 1/3), replace = TRUE)
-  if (raining == FALSE) friend1 <- if (friend1 == "yes") "no" else "yes"
-  if (raining == FALSE) friend2 <- if (friend2 == "yes") "no" else "yes"
-  if (raining == FALSE) friend3 <- if (friend3 == "yes") "no" else "yes"
-  if (friend1 == "yes" && friend2 == "yes" && friend3 == "yes") {
-    count <- count + 1
-    if (raining) positive <- positive + 1
+  for (j in 1:n) {
+    raining <- sample(x = c(TRUE, FALSE), prob = c(1/4, 3/4), size = 1)
+    friend1 <- sample(x = c("yes", "no"), size = 1, prob = c(2/3, 1/3), replace = TRUE)
+    friend2 <- sample(x = c("yes", "no"), size = 1, prob = c(2/3, 1/3), replace = TRUE)
+    friend3 <- sample(x = c("yes", "no"), size = 1, prob = c(2/3, 1/3), replace = TRUE)
+    if (raining == FALSE) friend1 <- if (friend1 == "yes") "no" else "yes"
+    if (raining == FALSE) friend2 <- if (friend2 == "yes") "no" else "yes"
+    if (raining == FALSE) friend3 <- if (friend3 == "yes") "no" else "yes"
+    if (friend1 == "yes" && friend2 == "yes" && friend3 == "yes") {
+      count[i] <- count[i] + 1
+      if (raining) positive[i] <- positive[i] + 1
+    }
   }
 }
 
-print(positive/count)
+sprintf("the average among all experiments is %.5f", mean(positive/count))
 
 ```
 Compare this with the actual answer which is 8/11 = 0.72727272
 
 
-## Including Plots
+## Additional Plots
 
-TODO: Make a histogram plot of the above data
+For each of the S = 2000 experiments, we can generate a histogram 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r probability, echo=FALSE}
+hist(positive/count, main = "Histogram of estimated probability", xlab = "Estimated Probability with n=500")
+abline(v = mean(positive/count), col = "red", lwd = 2)
+legend(x = "topright",
+  c("Mean"),
+  col = c("red"),
+  lwd = c(2))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+We can see that the empirical simulation supports the analytical answer.
